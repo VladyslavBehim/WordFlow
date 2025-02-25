@@ -13,9 +13,12 @@ struct MainView: View {
             Image(systemName: "globe")
                 .imageScale(.large)
                 .foregroundStyle(.tint)
-            Text("Hello, world!")
-            Text("test")
-            Text("HG")
+            HStack{
+                Text("Hello, world!")
+                Text("test")
+                Text("HG")
+            }
+            
         }
         
         .padding()
