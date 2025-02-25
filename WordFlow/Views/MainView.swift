@@ -15,6 +15,7 @@ struct MainView: View {
                 .foregroundStyle(.tint)
             Text("Hello, world!")
             Text("test")
+            Text("HG")
         }
         
         .padding()
