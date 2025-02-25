@@ -8,12 +8,18 @@
 import SwiftUI
 
 struct WordCardRow: View {
-    @State
+    @State var wordCard : WorkCard
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        HStack{
+            Text("\(wordCard.word)")
+            Spacer()
+            Text("\(wordCard.translation)")
+                .foregroundStyle(Color.gray)
+        }
     }
 }
 
 #Preview {
-    WordCardRow()
+    MainView()
+//    WordCardRow(wordCard: WorkCard(word: "Hello", translation: "Привет"))
 }

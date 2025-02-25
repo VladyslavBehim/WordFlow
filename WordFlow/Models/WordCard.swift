@@ -6,3 +6,9 @@
 //
 
 import Foundation
+
+struct WorkCard : Identifiable{
+    let id = UUID()
+    let word: String
+    let translation: String
+}

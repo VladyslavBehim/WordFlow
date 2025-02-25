@@ -9,19 +9,20 @@ import SwiftUI
 
 struct MainView: View {
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            HStack{
-                Text("Hello, world!")
-                Text("test")
-                Text("HG")
+        TabView {
+            Tab("Words", systemImage: "list.bullet.clipboard") {
+                WordList()
             }
+            Tab("Statistics", systemImage: "chart.xyaxis.line") {
+                Text("ds")
+            }
+            Tab("Setting", systemImage: "gear") {
+                Text("Settings")
+            }
+            
             
         }
         
-        .padding()
     }
     
 }
