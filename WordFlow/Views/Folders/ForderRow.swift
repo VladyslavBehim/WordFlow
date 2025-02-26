@@ -8,26 +8,15 @@
 import SwiftUI
 
 struct ForderRow: View {
-    @State var folder:Folder
+    
     var body: some View {
-        HStack{
-            Text("\(self.folder.imageOfFolder)")
-                .padding(.all , 10)
-                .background(Color.gray.opacity(0.5))
-                .clipShape(RoundedRectangle(cornerRadius: 17))
-            VStack(alignment:.leading){
-                Text("\(self.folder.nameOfFolder)")
-                    .fontWeight(.semibold)
-                Text("The number of words is \(self.folder.quantityOfWordsINFolder)")
-                    .font(.footnote)
-                    .foregroundStyle(Color.gray)
-            }
-        }
+        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
     }
 }
 
 #Preview {
-    ForderRow(folder: Folder(nameOfFolder: "New words", wordsInFolder: [WordCard(word: "Hello", translation: "Здарова")], imageOfFolder: "☹️", quantityOfWordsINFolder: 34))
+    ForderRow()
 }
+
 
 
