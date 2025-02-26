@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct WorkCard : Identifiable{
+struct WordCard : Identifiable{
     let id = UUID()
     let word: String
     let translation: String

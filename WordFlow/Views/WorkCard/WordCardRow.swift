@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct WordCardRow: View {
-    @State var wordCard : WorkCard
+    @State var wordCard : WordCard
     var body: some View {
         HStack{
             Text("\(wordCard.word)")

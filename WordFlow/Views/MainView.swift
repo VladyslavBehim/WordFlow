@@ -10,8 +10,8 @@ import SwiftUI
 struct MainView: View {
     var body: some View {
         TabView {
-            Tab("Words", systemImage: "list.bullet.clipboard") {
-                WordList()
+            Tab("Learning", systemImage: "list.bullet.clipboard") {
+                FolderList()
             }
             Tab("Statistics", systemImage: "chart.xyaxis.line") {
                 Text("ds")
