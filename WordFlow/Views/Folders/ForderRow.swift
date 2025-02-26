@@ -27,7 +27,7 @@ struct ForderRow: View {
 }
 
 #Preview {
-    ForderRow(folder: Folder(nameOfFolder: "New words", wordsInFolder: [WordCard(word: "Hello", translation: "Привет")], imageOfFolder: "☹️", quantityOfWordsINFolder: 34))
+    ForderRow(folder: Folder(nameOfFolder: "New words", wordsInFolder: [WordCard(word: "Hello", translation: "Здарова")], imageOfFolder: "☹️", quantityOfWordsINFolder: 34))
 }
 
 
