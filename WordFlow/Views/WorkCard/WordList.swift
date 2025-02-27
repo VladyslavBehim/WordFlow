@@ -18,70 +18,80 @@ struct WordList: View {
     @State var nameOfFolder : String
     var body: some View {
         VStack(spacing:0){
-            VStack{
-                Button {
-                    withAnimation(.default) {
-                        isShownTextField.toggle()
-                    }
-                } label: {
-                    Text(isShownTextField ? "Cancel" : "Add new word")
-                        .font(.title2)
-                        .fontWeight(.semibold)
-                        .foregroundStyle(Color.white)
-                        .frame(maxWidth:.infinity)
-                        .padding(.vertical)
-                        .background(Color.accentColor)
-                        .contentTransition(.numericText())
-                        .clipShape(RoundedRectangle(cornerRadius: 15))
-                }
-                
-                if isShownTextField{
-                    HStack{
-                        VStack{
-                            TextField("Enter new word", text: $newWord)
-                            TextField("Enter translation", text: $newWordTranslation)
-                        }
-                        Spacer()
-                        Button {
-                            let newWord = WordCard(word: newWord, translation: newWordTranslation)
-                            withAnimation(.default) {
-                                self.newWord = ""
-                                self.newWordTranslation = ""
-                                words.append(newWord)
-                                isShownTextField = false
-                            }
-                        } label: {
-                            Image(systemName: "plus.circle.fill")
-                                .font(.title2)
-                                .foregroundStyle(Color.white)
-                        }
-                        
-                    }
-                    .padding()
-                    .background(Color.accentColor)
-                    .clipShape(UnevenRoundedRectangle(topLeadingRadius: 15, bottomLeadingRadius: 25, bottomTrailingRadius: 25 , topTrailingRadius: 15))
-                }
-            }
-            .padding(.horizontal)
-            .padding(.top)
-            
-            
-            
             List{
+                
                 Section {
+                   
                     ForEach(words.reversed()){ word in
                         WordCardRow(wordCard: word)
                     }
                 } header: {
                     HStack{
-                        Text("Words")
+                        VStack(alignment:.leading){
+                            Text("Words")
+                            Text("\(dateFormatter.formatDateDayMounthYear(dateOfCreation))")
+                        }
+                        .fontWeight(.semibold)
                         Spacer()
-                        Text("\(dateFormatter.formatDateDayMounthYear(dateOfCreation))")
+                        Button {
+                            withAnimation(.default) {
+                                isShownTextField = true
+                            }
+                        } label: {
+                            Text("Add new word")
+                                .fontWeight(.semibold)
+                                .foregroundStyle(Color.white)
+                                .padding(.vertical , 7)
+                                .padding(.horizontal)
+                                .background(Color.accentColor)
+                                .clipShape(RoundedRectangle(cornerRadius: 15))
+                        }
                     }
                 }
                 
+
             }
-            
+            .sheet(isPresented: $isShownTextField) {
+                VStack{
+                    VStack{
+                        TextField("Term", text: $newWord)
+                            .padding()
+                            .background(Color.gray.opacity(0.3))
+                            .clipShape(RoundedRectangle(cornerRadius: 20))
+
+                        TextField("Definition", text: $newWordTranslation)
+                            .padding()
+                            .background(Color.gray.opacity(0.3))
+                            .clipShape(RoundedRectangle(cornerRadius: 20))
+                    }
+                    Button {
+                        let newWord = WordCard(word: newWord, translation: newWordTranslation)
+                        withAnimation(.default) {
+                            self.newWord = ""
+                            self.newWordTranslation = ""
+                            words.append(newWord)
+                            isShownTextField = false
+                        }
+                    } label: {
+                        Text("Add word")
+                            .font(.title2)
+                            .fontWeight(.semibold)
+                            .foregroundStyle(Color.white)
+                            .padding(.vertical)
+                            .frame(maxWidth:.infinity)
+                            .background(Color.accentColor)
+                            .clipShape(RoundedRectangle(cornerRadius: 15))
+                    }
+                    .padding(.vertical)
+                    
+                    
+                }
+                .padding()
+                .presentationDetents([.height(270)])
+                .presentationCornerRadius(30)
+                .presentationDragIndicator(.visible)
+            }
+                        
         }
         .navigationTitle("\(nameOfFolder)")
     }

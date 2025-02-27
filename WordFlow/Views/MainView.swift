@@ -10,17 +10,20 @@ import SwiftUI
 struct MainView: View {
     var body: some View {
         TabView {
-            Tab("Learning", systemImage: "list.bullet.clipboard") {
-                FolderList()
-            }
-            Tab("Statistics", systemImage: "chart.xyaxis.line") {
-                Text("ds")
-            }
-            Tab("Setting", systemImage: "gear") {
-                Text("Settings")
-            }
-            
-            
+            FolderList()
+                .tabItem {
+                    Label("Learning", systemImage: "list.bullet.clipboard")
+                }
+
+            Text("Statistics")
+                .tabItem {
+                    Label("Statistics", systemImage: "chart.xyaxis.line")
+                }
+
+            Text("Settings")
+                .tabItem {
+                    Label("Setting", systemImage: "gear")
+                }
         }
         
     }
