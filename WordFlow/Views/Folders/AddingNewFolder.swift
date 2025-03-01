@@ -9,6 +9,7 @@ import SwiftUI
 
 struct AddingNewFolder: View {
     @State var nameOfFolder: String = String()
+    @State var isShownEmojiSelector : Bool = false
     @State var selectedEmoji: String = "📂"
     @Binding var isShownTextField : Bool
     @Binding var folders : [Folder]
@@ -16,10 +17,16 @@ struct AddingNewFolder: View {
     var body: some View {
         VStack{
             HStack{
-                Text("\(selectedEmoji)")
-                    .padding()
-                    .background(Color.accentColor.opacity(0.5))
-                    .clipShape(RoundedRectangle(cornerRadius: 17))
+                Button {
+                    isShownEmojiSelector = true
+                } label: {
+                    Text("\(selectedEmoji)")
+                        .padding()
+                        .background(Color.accentColor.opacity(0.5))
+                        .clipShape(RoundedRectangle(cornerRadius: 17))
+                }
+
+                
                 TextField("Name of folder", text: $nameOfFolder)
                     .padding()
                     .background(Color.gray.opacity(0.3))
@@ -47,6 +54,12 @@ struct AddingNewFolder: View {
             
         }
         .padding()
+        .sheet(isPresented: $isShownEmojiSelector) {
+            EmojiSelector(isShownEmojiSelector: $isShownEmojiSelector, selectedEmoji: $selectedEmoji)
+                .presentationDetents([.fraction(0.65) , .large])
+                .presentationCornerRadius(30)
+                .presentationDragIndicator(.visible)
+        }
     }
 }
 

@@ -20,6 +20,7 @@ struct ForderRow: View {
                 Text("\(self.folder.nameOfFolder)")
                     .fontWeight(.semibold)
                 Text("The number of words is \(self.folder.quantityOfWordsINFolder)")
+                
                     .font(.footnote)
                     .foregroundStyle(Color.gray)
             }
