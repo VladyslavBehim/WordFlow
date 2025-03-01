@@ -12,14 +12,21 @@ struct WordCardRow: View {
     var body: some View {
         HStack{
             Text("\(wordCard.word)")
+                .foregroundStyle(wordCard.colorOfCard)
+                .fontWeight(.semibold)
             Spacer()
             Text("\(wordCard.translation)")
-                .foregroundStyle(Color.gray)
+                .foregroundStyle(wordCard.colorOfCard.opacity(0.9))
         }
     }
 }
 
 #Preview {
-    MainView()
-//    WordCardRow(wordCard: WorkCard(word: "Hello", translation: "Привет"))
+    List{
+        WordCardRow(wordCard: WordCard(word: "Hello", translation: "Привет", colorOfCard: Color.red))
+        WordCardRow(wordCard: WordCard(word: "Obviosly", translation: "Очевидно", colorOfCard: Color.accentColor))
+        WordCardRow(wordCard: WordCard(word: "Boys", translation: "Парни", colorOfCard: Color.primary))
+    }
+
+    
 }

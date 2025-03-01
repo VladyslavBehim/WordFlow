@@ -6,9 +6,11 @@
 //
 
 import Foundation
+import SwiftUI
 
 struct WordCard : Identifiable{
     let id = UUID()
     let word: String
     let translation: String
+    let colorOfCard: Color
 }
