@@ -9,14 +9,34 @@ import SwiftUI
 
 struct WordCardRow: View {
     @State var wordCard : WordCard
+    var speechManager = SpeechManager()
+    
     var body: some View {
+        
         HStack{
-            Text("\(wordCard.word)")
-                .foregroundStyle(wordCard.colorOfCard)
-                .fontWeight(.semibold)
+            VStack(alignment:.leading){
+                Text("\(wordCard.word)")
+                    .foregroundStyle(wordCard.colorOfCard)
+                    .fontWeight(.semibold)
+                Text("\(wordCard.translation)")
+                    .foregroundStyle(Color.gray)
+            }
             Spacer()
-            Text("\(wordCard.translation)")
-                .foregroundStyle(wordCard.colorOfCard.opacity(0.9))
+            Button {
+                speechManager.speak(text: wordCard.word, voice: "com.apple.ttsbundle.siri_female_en-US_compact")
+            } label: {
+                Image(systemName: "waveform")
+            }
+            .buttonStyle(.borderless)
+            Button {
+
+            } label: {
+                Image(systemName: "star")
+            }
+            .buttonStyle(.borderless)
+            
+
+            
         }
     }
 }
