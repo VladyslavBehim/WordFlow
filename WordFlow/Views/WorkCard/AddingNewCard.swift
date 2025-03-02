@@ -13,6 +13,8 @@ struct AddingNewCard: View {
     @State var newWordTranslation : String = String()
     @Binding var words : [WordCard]
     @Binding var isShownTextField : Bool
+    
+    
     var body: some View {
         VStack{
             VStack{

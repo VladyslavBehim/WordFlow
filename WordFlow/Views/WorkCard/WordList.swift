@@ -11,6 +11,7 @@ struct WordList: View {
     let dateFormatter = DateFormatters()
     
     @State var isShownTextField : Bool = false
+    @State var isShownFleshCardsView : Bool = false
     @State var words : [WordCard]
     @State var dateOfCreation : Date
     @State var nameOfFolder : String
@@ -18,7 +19,13 @@ struct WordList: View {
     var body: some View {
         VStack(spacing:0){
             List{
-                
+                Section{
+                    Button {
+                        isShownFleshCardsView.toggle()
+                    } label: {
+                        Text("Flashcards")
+                    }
+                }
                 Section {
                    
                     ForEach(words.reversed()){ word in
@@ -47,14 +54,15 @@ struct WordList: View {
                         }
                     }
                 }
-                
-                
             }
             .sheet(isPresented: $isShownTextField) {
                 AddingNewCard(words: $words, isShownTextField: $isShownTextField)
                     .presentationDetents([.height(300)])
                     .presentationCornerRadius(30)
                     .presentationDragIndicator(.visible)
+            }
+            .fullScreenCover(isPresented: $isShownFleshCardsView) {
+                FlashcardView(wordCards: words)
             }
             
         }
