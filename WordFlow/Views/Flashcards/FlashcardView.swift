@@ -37,12 +37,14 @@ struct FlashcardView: View {
                 Text("Нет карточек для изучения")
                     .font(.title)
             } else {
-                Gauge(value: Double(currentWord), in: 0...Double(wordCards.count)) {
-                }.gaugeStyle(.accessoryLinearCapacity)
+                
                 
                 if isFinished {
-                    Text("Result")
+                    
+                    ResultView(knownWords: knownWords, stillLearningWords: stillLearningWords)
                 }else{
+                    Gauge(value: Double(currentWord), in: 0...Double(wordCards.count)) {
+                    }.gaugeStyle(.accessoryLinearCapacity)
                     FlashcardRow(wordCard: wordCards[currentIndex],
                                  sizeOfArray: wordCards.count,
                                  currentIndex: $currentIndex ,
