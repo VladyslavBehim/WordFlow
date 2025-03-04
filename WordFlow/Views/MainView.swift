@@ -8,9 +8,12 @@
 import SwiftUI
 
 struct MainView: View {
+    @StateObject var folderViewModel = FolderViewModel()
+
     var body: some View {
         TabView {
             FolderList()
+                .environmentObject(folderViewModel)
                 .tabItem {
                     Label("Learning", systemImage: "list.bullet.clipboard")
                 }

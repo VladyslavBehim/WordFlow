@@ -8,11 +8,14 @@
 import Foundation
 import SwiftUI
 
-struct Folder:Identifiable{
-    let id : UUID = UUID()
-    let nameOfFolder : String
-    let wordsInFolder : [WordCard]
-    let imageOfFolder : String
-    let quantityOfWordsINFolder : Int
+struct Folder:Identifiable {
+    let id: String = UUID().uuidString
+    var nameOfFolder : String
+    var wordsInFolder : [WordCard]
+    var imageOfFolder : String
+    var quantityOfWordsInFolder : Int {
+        self.wordsInFolder.count
+    }
     let creationDate : Date = Date()
 }
+

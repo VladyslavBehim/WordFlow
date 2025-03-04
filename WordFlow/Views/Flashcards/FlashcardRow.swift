@@ -20,6 +20,7 @@ struct FlashcardRow: View {
     @Binding var learnedWords : [WordCard]
     @Binding var stillLearningWords : [WordCard]
     var speechManager = SpeechManager()
+    @EnvironmentObject var flashCardsVM : FlashCardViewModel
     
     
     var body: some View {
@@ -119,18 +120,25 @@ struct FlashcardRow: View {
                             stillLearningWords.append(wordCard)
                         }
                     }
-                    if currentIndex < sizeOfArray - 1{
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                    
+                    
+                    flashCardsVM.changeIndex(sizeOfArray: sizeOfArray) { result in
+                        if !result {
                             withAnimation(.default) {
-                                currentIndex += 1
+                                isFinished = true
                             }
+                            print("Все карточки пройдены!")
                         }
-                    } else {
-                        withAnimation(.default) {
-                            isFinished = true
-                        }
-                        print("Все карточки пройдены!")
                     }
+//                    if currentIndex < sizeOfArray - 1{
+//                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+//                            withAnimation(.default) {
+//                                currentIndex += 1
+//                            }
+//                        }
+//                    } else {
+//                        
+//                    }
                     withAnimation(.default) {
                         currentWord += 1
                     }

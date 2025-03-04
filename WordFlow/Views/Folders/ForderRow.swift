@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ForderRow: View {
     
-    @State var folder:Folder
+    @Binding var folder:Folder
     var body: some View {
         HStack{
             Text("\(self.folder.imageOfFolder)")
@@ -19,7 +19,7 @@ struct ForderRow: View {
             VStack(alignment:.leading){
                 Text("\(self.folder.nameOfFolder)")
                     .fontWeight(.semibold)
-                Text("The number of words is \(self.folder.quantityOfWordsINFolder)")
+                Text("The number of words is \(folder.quantityOfWordsInFolder)")
                 
                     .font(.footnote)
                     .foregroundStyle(Color.gray)

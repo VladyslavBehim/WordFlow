@@ -11,8 +11,11 @@ struct AddingNewCard: View {
     @State var colorForCard : Color = Color.primary
     @State var newWord : String = String()
     @State var newWordTranslation : String = String()
-    @Binding var words : [WordCard]
+//    @State var words : [WordCard]
     @Binding var isShownTextField : Bool
+    @EnvironmentObject var folderViewModel:FolderViewModel
+    @Binding var folder : Folder
+   
     
     
     var body: some View {
@@ -53,13 +56,14 @@ struct AddingNewCard: View {
                 }
                 .padding(.horizontal)
             }
+            
             Spacer()
             Button {
                 let newWord = WordCard(word: newWord, translation: newWordTranslation, colorOfCard: colorForCard)
                 withAnimation(.default) {
                     self.newWord = ""
                     self.newWordTranslation = ""
-                    words.append(newWord)
+                    folderViewModel.addNewWord(wordCard: newWord, folderId: folder.id)
                     isShownTextField = false
                 }
             } label: {

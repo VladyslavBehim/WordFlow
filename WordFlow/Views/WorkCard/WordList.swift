@@ -8,14 +8,16 @@
 import SwiftUI
 
 struct WordList: View {
+    
     let dateFormatter = DateFormatters()
     
     @State var isShownTextField : Bool = false
     @State var isShownFleshCardsView : Bool = false
-    @State var words : [WordCard]
-    @State var dateOfCreation : Date
-    @State var nameOfFolder : String
+    @Binding var folder : Folder
     
+    
+    @EnvironmentObject var folderViewModel:FolderViewModel
+
     var body: some View {
         VStack(spacing:0){
             List{
@@ -23,19 +25,34 @@ struct WordList: View {
                     Button {
                         isShownFleshCardsView.toggle()
                     } label: {
-                        Text("Flashcards")
+                        Label {
+                            Text("Flashcards")
+                        } icon: {
+                            Image(systemName: "inset.filled.rectangle.on.rectangle")
+                        }
+
                     }
                 }
                 Section {
-                   
-                    ForEach(words.reversed()){ word in
-                        WordCardRow(wordCard: word)
+                    ForEach(folder.wordsInFolder.reversed()){ word in
+                        HStack{
+                            WordCardRow(wordCard: word)
+                            Button {
+                                folderViewModel.removeWord(folderId: folder.id, wordId: word.id)
+
+                            } label: {
+                                Image(systemName: "trash.fill")
+
+                            }
+                        }
+                        
+
                     }
                 } header: {
                     HStack{
                         VStack(alignment:.leading){
                             Text("Words")
-                            Text("\(dateFormatter.formatDateDayMounthYear(dateOfCreation))")
+                            Text("\(dateFormatter.formatDateDayMounthYear(folder.creationDate))")
                         }
                         .fontWeight(.semibold)
                         Spacer()
@@ -55,21 +72,23 @@ struct WordList: View {
                     }
                 }
             }
+            
             .sheet(isPresented: $isShownTextField) {
-                AddingNewCard(words: $words, isShownTextField: $isShownTextField)
+                AddingNewCard(isShownTextField: $isShownTextField, folder: $folder)
                     .presentationDetents([.height(300)])
                     .presentationCornerRadius(30)
                     .presentationDragIndicator(.visible)
             }
             .fullScreenCover(isPresented: $isShownFleshCardsView) {
-                FlashcardView(wordCards: words)
+                FlashcardView(wordCards: folder.wordsInFolder)
             }
             
         }
-        .navigationTitle("\(nameOfFolder)")
+        
+        .navigationTitle("\(folder.nameOfFolder)")
     }
 }
 
 #Preview {
-    WordList(words: [WordCard(word: "test", translation: "тест", colorOfCard: Color.primary), WordCard(word: "Hello", translation: "Привет", colorOfCard: Color.primary)], dateOfCreation: Date(), nameOfFolder: "Lesson 2")
+    WordList(folder: .constant(Folder(nameOfFolder: "Test", wordsInFolder: [WordCard(word: "test", translation: "Тест", colorOfCard: Color.pink)], imageOfFolder: "")))
 }

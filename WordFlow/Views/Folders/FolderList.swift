@@ -9,18 +9,20 @@ import SwiftUI
 
 struct FolderList: View {
     @State var isShownAddingView : Bool = false
-    @State var folders : [Folder] = [Folder(nameOfFolder: "Lesson 2", wordsInFolder: [WordCard(word: "simultaneously", translation: "одновременно", colorOfCard: Color.blue)], imageOfFolder: "🤯", quantityOfWordsINFolder: 231),Folder(nameOfFolder: "Lesson 3", wordsInFolder: [WordCard(word: "do you know", translation: "ты знаешь?", colorOfCard: Color.primary)], imageOfFolder: "🥵", quantityOfWordsINFolder: 54),Folder(nameOfFolder: "Lesson 4", wordsInFolder: [WordCard(word: "Hello", translation: "Приветики", colorOfCard: Color.primary), WordCard(word: "Diversity", translation: "Разнообразие", colorOfCard: Color.primary), WordCard(word: "Obviosly", translation: "Очевидно", colorOfCard: Color.primary),WordCard(word: "current", translation: "текущий", colorOfCard: Color.primary),WordCard(word: "man", translation: "мужчина", colorOfCard: Color.primary),WordCard(word: "girl", translation: "девушка", colorOfCard: Color.primary),WordCard(word: "wave", translation: "волна", colorOfCard: Color.primary),WordCard(word: "striky", translation: "строгий", colorOfCard: Color.primary)], imageOfFolder: "🥴", quantityOfWordsINFolder: 164)]
+    @EnvironmentObject var folderViewModel : FolderViewModel
     
     var body: some View {
         NavigationView {
             List{
                 Section {
-                    ForEach(folders){ folder in
+                    ForEach($folderViewModel.folders){ folder in
                         NavigationLink {
-                            WordList(words: folder.wordsInFolder, dateOfCreation: folder.creationDate, nameOfFolder: folder.nameOfFolder)
+                            WordList(folder: folder )
+                                .environmentObject(folderViewModel)
                         } label: {
                             ForderRow(folder: folder)
                         }
+                        
                     }
                     
                 } header: {
@@ -48,7 +50,7 @@ struct FolderList: View {
             .navigationTitle("Library")
             .navigationBarTitleDisplayMode(.inline)
             .sheet(isPresented: $isShownAddingView) {
-                AddingNewFolder(isShownTextField: $isShownAddingView, folders: $folders)
+                AddingNewFolder(isShownTextField: $isShownAddingView, folders: $folderViewModel.folders)
                     .presentationDetents([.height(200)])
                     .presentationCornerRadius(30)
                     .presentationDragIndicator(.visible)

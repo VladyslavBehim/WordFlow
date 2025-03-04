@@ -8,8 +8,8 @@
 import Foundation
 import SwiftUI
 
-struct WordCard : Identifiable{
-    let id = UUID()
+struct WordCard : Identifiable , Equatable{
+    let id: String = UUID().uuidString
     let word: String
     let translation: String
     let colorOfCard: Color

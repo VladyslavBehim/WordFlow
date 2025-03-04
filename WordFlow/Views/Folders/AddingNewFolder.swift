@@ -34,7 +34,7 @@ struct AddingNewFolder: View {
             }
             Spacer()
             Button {
-                let newWord = Folder(nameOfFolder: nameOfFolder, wordsInFolder: [WordCard](), imageOfFolder: selectedEmoji, quantityOfWordsINFolder: 0)
+                let newWord = Folder( nameOfFolder: nameOfFolder, wordsInFolder: [WordCard](), imageOfFolder: selectedEmoji)
                 withAnimation(.default) {
                     folders.append(newWord)
                     isShownTextField = false
