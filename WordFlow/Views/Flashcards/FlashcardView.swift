@@ -9,18 +9,13 @@ import SwiftUI
 
 struct FlashcardView: View {
     @State var wordCards: [WordCard]
-    @State private var currentIndex: Int = 0
-    @State private var currentWord: Int = 0
     @State private var isFinished = false
-    @Environment(\.dismiss) var dismiss
-    
-    @StateObject var flashCardVM = FlashCardViewModel()
-    
     @State private var transitionType: TypeOfTracnsition = .moveForward
-    @EnvironmentObject var folderViewModel:FolderViewModel
+    @StateObject var flashCardVM = FlashCardViewModel()
+    @Environment(\.dismiss) var dismiss
     @Binding var folder : Folder
+    @ObservedObject var viewModel: FolderVM
 
-    
     var learnedWords:Int {
         folder.wordsInFolder.filter { $0.learned }.count
     }
@@ -57,7 +52,7 @@ struct FlashcardView: View {
                                  sizeOfArray: wordCards.count,
                                  currentIndex: $flashCardVM.currentIndex ,
                                  currentWord: $flashCardVM.indexOfWord,
-                                 isFinished: $isFinished, folder: $folder)
+                                 isFinished: $isFinished, folder: $folder, viewModel: viewModel)
                     .environmentObject(flashCardVM)
                     .id(flashCardVM.currentIndex)
                     .transition(transitionType.transition)

@@ -8,18 +8,14 @@
 import SwiftUI
 
 struct WordList: View {
-    
     let dateFormatter = DateFormatters()
-    
     @State var isShownTextField : Bool = false
     @State var isShownFleshCardsView : Bool = false
     @Binding var folder : Folder
-    
-    
-    @EnvironmentObject var folderViewModel:FolderViewModel
     var learnedWords : Int{
         folder.wordsInFolder.filter { $0.learned }.count
     }
+    @ObservedObject var viewModel: FolderVM
     var body: some View {
         VStack(spacing:0){
             List{
@@ -53,7 +49,7 @@ struct WordList: View {
                             }
                             WordCardRow(wordCard: word)
                             Button {
-                                folderViewModel.removeWord(folderId: folder.id, wordId: word.id)
+                                viewModel.deleteWord(from: folder.id, wordID: word.id)
 
                             } label: {
                                 Image(systemName: "trash.fill")
@@ -65,6 +61,7 @@ struct WordList: View {
                         
 
                     }
+                    
                 } header: {
                     HStack{
                         VStack(alignment:.leading){
@@ -91,14 +88,13 @@ struct WordList: View {
             }
             
             .sheet(isPresented: $isShownTextField) {
-                AddingNewCard(isShownTextField: $isShownTextField, folder: $folder)
+                AddingNewCard(isShownTextField: $isShownTextField, folder: folder, viewModel: viewModel)
                     .presentationDetents([.height(300)])
                     .presentationCornerRadius(30)
                     .presentationDragIndicator(.visible)
             }
             .fullScreenCover(isPresented: $isShownFleshCardsView) {
-                FlashcardView(wordCards: folder.wordsInFolder, folder: $folder)
-                    .environmentObject(folderViewModel)
+                FlashcardView(wordCards: folder.wordsInFolder, folder: $folder, viewModel: viewModel)
             }
             
         }
@@ -107,6 +103,6 @@ struct WordList: View {
     }
 }
 
-#Preview {
-    WordList(folder: .constant(Folder(nameOfFolder: "Test", wordsInFolder: [WordCard(word: "test", translation: "Тест", colorOfCard: Color.pink)], imageOfFolder: "")))
-}
+//#Preview {
+//    WordList(folder: .constant(Folder(nameOfFolder: "Test", wordsInFolder: [WordCard(word: "test", translation: "Тест", colorOfCard: Color.pink)], imageOfFolder: "")))
+//}

@@ -11,13 +11,12 @@ struct AddingNewCard: View {
     @State var colorForCard : Color = Color.primary
     @State var newWord : String = String()
     @State var newWordTranslation : String = String()
-//    @State var words : [WordCard]
     @Binding var isShownTextField : Bool
-    @EnvironmentObject var folderViewModel:FolderViewModel
-    @Binding var folder : Folder
+    @State var folder : Folder
    
     
-    
+    @ObservedObject var viewModel: FolderVM
+
     var body: some View {
         VStack{
             VStack{
@@ -59,13 +58,12 @@ struct AddingNewCard: View {
             
             Spacer()
             Button {
-                let newWord = WordCard(word: newWord, translation: newWordTranslation, colorOfCard: colorForCard)
                 withAnimation(.default) {
-                    self.newWord = ""
-                    self.newWordTranslation = ""
-                    folderViewModel.addNewWord(wordCard: newWord, folderId: folder.id)
                     isShownTextField = false
+                    viewModel.addWord(to: folder.id, term: newWord, definition: newWordTranslation)
                 }
+                self.newWord = ""
+                self.newWordTranslation = ""
             } label: {
                 Text("Add word")
                     .font(.title2)

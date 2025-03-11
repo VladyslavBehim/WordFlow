@@ -17,10 +17,10 @@ struct FlashcardRow: View {
     @Binding var currentIndex : Int
     @Binding var currentWord : Int
     @Binding var isFinished : Bool
-    var speechManager = SpeechManager()
-    @EnvironmentObject var flashCardsVM : FlashCardViewModel
-    @EnvironmentObject var folderViewModel:FolderViewModel
     @Binding var folder :Folder
+    @EnvironmentObject var flashCardsVM : FlashCardViewModel
+    @ObservedObject var viewModel: FolderVM
+    var speechManager = SpeechManager()
     
     var body: some View {
         
@@ -43,7 +43,7 @@ struct FlashcardRow: View {
                     .frame(maxHeight:.infinity)
                     .transition(.asymmetric(insertion: .move(edge: .bottom) .combined(with: .scale) .combined(with: .opacity), removal: .move(edge: .top) .combined(with: .scale) .combined(with: .opacity)))
                     .multilineTextAlignment(.center)
-
+                
             }else{
                 
                 Text("\(wordCard.translation)")
@@ -72,7 +72,7 @@ struct FlashcardRow: View {
             }
         }
         .animation(.spring(), value: cardOffset)
-
+        
         
     }
     
@@ -111,12 +111,12 @@ struct FlashcardRow: View {
                 if abs(offset.width) > 100 {
                     if offset.width > 0 {
                         feedback.notificationOccurred(.success)
-                        folderViewModel.changeStatusOfWordTrue(folderId: folder.id , wordId: folder.wordsInFolder[flashCardsVM.indexOfWord].id)
-                        
+                        viewModel.changeStatusOfWordTrue(from: folder.id, wordId: folder.wordsInFolder[flashCardsVM.indexOfWord].id)
                     } else {
                         feedback.notificationOccurred(.error)
-                        folderViewModel.changeStatusOfWordFalse(folderId: folder.id , wordId: folder.wordsInFolder[flashCardsVM.indexOfWord].id)
-                                            }
+                        viewModel.changeStatusOfWordFalse(from: folder.id, wordId: folder.wordsInFolder[flashCardsVM.indexOfWord].id)
+
+                    }
                     
                     
                     flashCardsVM.changeIndex(sizeOfArray: sizeOfArray) { result in
@@ -127,7 +127,7 @@ struct FlashcardRow: View {
                             print("Все карточки пройдены!")
                         }
                     }
-
+                    
                     
                 } else {
                     withAnimation(.default) {

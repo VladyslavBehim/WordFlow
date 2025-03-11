@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-final class FlashCardViewModel: FolderViewModel {
+final class FlashCardViewModel:ObservableObject {
     @Published var currentIndex : Int = 0
     @Published var indexOfWord : Int = 0
     

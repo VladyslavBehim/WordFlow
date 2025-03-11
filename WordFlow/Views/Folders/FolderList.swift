@@ -9,17 +9,16 @@ import SwiftUI
 
 struct FolderList: View {
     @State var isShownAddingView : Bool = false
-    @EnvironmentObject var folderViewModel : FolderViewModel
+    
+    @StateObject var viewModel = FolderVM(repository: FolderRepository())
     
     var body: some View {
         NavigationStack {
-            
             List{
                 Section {
-                    ForEach($folderViewModel.folders){ folder in
+                    ForEach($viewModel.folders){ folder in
                         NavigationLink {
-                            WordList(folder: folder )
-                                .environmentObject(folderViewModel)
+                            WordList(folder: folder, viewModel: viewModel )
                         } label: {
                             ForderRow(folder: folder)
                         }
@@ -51,7 +50,7 @@ struct FolderList: View {
             .navigationTitle("Library")
             .navigationBarTitleDisplayMode(.inline)
             .sheet(isPresented: $isShownAddingView) {
-                AddingNewFolder(isShownTextField: $isShownAddingView, folders: $folderViewModel.folders)
+                AddingNewFolder(isShownTextField: $isShownAddingView, viewModel: viewModel)
                     .presentationDetents([.height(200)])
                     .presentationCornerRadius(30)
                     .presentationDragIndicator(.visible)

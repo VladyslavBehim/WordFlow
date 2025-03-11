@@ -12,7 +12,7 @@ struct AddingNewFolder: View {
     @State var isShownEmojiSelector : Bool = false
     @State var selectedEmoji: String = "📂"
     @Binding var isShownTextField : Bool
-    @Binding var folders : [Folder]
+    @ObservedObject var viewModel: FolderVM
 
     var body: some View {
         VStack{
@@ -34,9 +34,9 @@ struct AddingNewFolder: View {
             }
             Spacer()
             Button {
-                let newWord = Folder( nameOfFolder: nameOfFolder, wordsInFolder: [WordCard](), imageOfFolder: selectedEmoji)
+//                let newWord = Folder( nameOfFolder: nameOfFolder, wordsInFolder: [WordCard](), imageOfFolder: selectedEmoji)
                 withAnimation(.default) {
-                    folders.append(newWord)
+                    viewModel.createFolder(nameOfFolder: nameOfFolder, imageOfFolder: selectedEmoji)
                     isShownTextField = false
                 }
             } label: {
