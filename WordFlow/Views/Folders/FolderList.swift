@@ -12,7 +12,8 @@ struct FolderList: View {
     @EnvironmentObject var folderViewModel : FolderViewModel
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
+            
             List{
                 Section {
                     ForEach($folderViewModel.folders){ folder in

@@ -17,11 +17,10 @@ struct FlashcardRow: View {
     @Binding var currentIndex : Int
     @Binding var currentWord : Int
     @Binding var isFinished : Bool
-    @Binding var learnedWords : [WordCard]
-    @Binding var stillLearningWords : [WordCard]
     var speechManager = SpeechManager()
     @EnvironmentObject var flashCardsVM : FlashCardViewModel
-    
+    @EnvironmentObject var folderViewModel:FolderViewModel
+    @Binding var folder :Folder
     
     var body: some View {
         
@@ -91,6 +90,7 @@ struct FlashcardRow: View {
     
     private func getBackgroundColor(offset: CGSize) -> Color {
         if offset.width > 0 {
+            
             return .green
         }
         if offset.width < 0 {
@@ -111,15 +111,12 @@ struct FlashcardRow: View {
                 if abs(offset.width) > 100 {
                     if offset.width > 0 {
                         feedback.notificationOccurred(.success)
-                        withAnimation(.default) {
-                            learnedWords.append(wordCard)
-                        }
+                        folderViewModel.changeStatusOfWordTrue(folderId: folder.id , wordId: folder.wordsInFolder[flashCardsVM.indexOfWord].id)
+                        
                     } else {
                         feedback.notificationOccurred(.error)
-                        withAnimation(.default) {
-                            stillLearningWords.append(wordCard)
-                        }
-                    }
+                        folderViewModel.changeStatusOfWordFalse(folderId: folder.id , wordId: folder.wordsInFolder[flashCardsVM.indexOfWord].id)
+                                            }
                     
                     
                     flashCardsVM.changeIndex(sizeOfArray: sizeOfArray) { result in
@@ -130,18 +127,7 @@ struct FlashcardRow: View {
                             print("Все карточки пройдены!")
                         }
                     }
-//                    if currentIndex < sizeOfArray - 1{
-//                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-//                            withAnimation(.default) {
-//                                currentIndex += 1
-//                            }
-//                        }
-//                    } else {
-//                        
-//                    }
-                    withAnimation(.default) {
-                        currentWord += 1
-                    }
+
                     
                 } else {
                     withAnimation(.default) {
@@ -152,6 +138,6 @@ struct FlashcardRow: View {
     }
 }
 
-#Preview {
-    FlashcardRow(wordCard: WordCard(word: "Hello , my name is Vladislav , and I am 22 years old", translation: "Привет, мой имя Владислав, и я 22 года", colorOfCard: Color.primary), sizeOfArray: 3, currentIndex: .constant(0), currentWord: .constant(0), isFinished: .constant(false), learnedWords: .constant([WordCard]()), stillLearningWords: .constant([WordCard]()))
-}
+//#Preview {
+//    FlashcardRow(wordCard: WordCard(word: "Hello , my name is Vladislav , and I am 22 years old", translation: "Привет, мой имя Владислав, и я 22 года", colorOfCard: Color.primary), sizeOfArray: 3, currentIndex: .constant(0), currentWord: .constant(0), isFinished: .constant(false), learnedWords: .constant([WordCard]()), stillLearningWords: .constant([WordCard]()))
+//}

@@ -10,6 +10,7 @@ import SwiftUI
 
 final class FlashCardViewModel: FolderViewModel {
     @Published var currentIndex : Int = 0
+    @Published var indexOfWord : Int = 0
     
     
     
@@ -18,10 +19,14 @@ final class FlashCardViewModel: FolderViewModel {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                 withAnimation(.default) {
                     self.currentIndex += 1
+                    self.indexOfWord += 1
                 }
             }
             completion(true)
         }else{
+            withAnimation(.default) {
+                self.indexOfWord += 1
+            }
             completion(false)
         }
     }
@@ -31,6 +36,7 @@ final class FlashCardViewModel: FolderViewModel {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                 withAnimation(.default) {
                     self.currentIndex -= 1
+                    self.indexOfWord -= 1
                 }
             }
             completion(true)

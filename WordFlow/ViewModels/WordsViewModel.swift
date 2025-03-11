@@ -16,7 +16,6 @@ import Foundation
     
     func addNewWord(_ wordCard: WordCard) {
         folder.wordsInFolder.append(wordCard)
-        print(folder.wordsInFolder)
     }
     
     func removeWord(wordId: String) {

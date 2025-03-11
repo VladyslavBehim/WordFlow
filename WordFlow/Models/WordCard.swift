@@ -13,4 +13,5 @@ struct WordCard : Identifiable , Equatable{
     let word: String
     let translation: String
     let colorOfCard: Color
+    var learned: Bool = false
 }

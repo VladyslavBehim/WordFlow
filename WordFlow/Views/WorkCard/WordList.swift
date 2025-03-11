@@ -17,7 +17,9 @@ struct WordList: View {
     
     
     @EnvironmentObject var folderViewModel:FolderViewModel
-
+    var learnedWords : Int{
+        folder.wordsInFolder.filter { $0.learned }.count
+    }
     var body: some View {
         VStack(spacing:0){
             List{
@@ -33,9 +35,22 @@ struct WordList: View {
 
                     }
                 }
+                Section{
+                    HStack{
+                        Text("Learned")
+                            .foregroundStyle(Color.gray)
+                        Spacer()
+                        Text("\(learnedWords) | \(folder.wordsInFolder.count)")
+                            .fontWeight(.semibold)
+                    }
+                }
                 Section {
                     ForEach(folder.wordsInFolder.reversed()){ word in
+                       
                         HStack{
+                            if word.learned{
+                                Image(systemName: "graduationcap.fill")
+                            }
                             WordCardRow(wordCard: word)
                             Button {
                                 folderViewModel.removeWord(folderId: folder.id, wordId: word.id)
@@ -44,6 +59,8 @@ struct WordList: View {
                                 Image(systemName: "trash.fill")
 
                             }
+                            .buttonStyle(.borderless)
+
                         }
                         
 
@@ -80,7 +97,8 @@ struct WordList: View {
                     .presentationDragIndicator(.visible)
             }
             .fullScreenCover(isPresented: $isShownFleshCardsView) {
-                FlashcardView(wordCards: folder.wordsInFolder)
+                FlashcardView(wordCards: folder.wordsInFolder, folder: $folder)
+                    .environmentObject(folderViewModel)
             }
             
         }

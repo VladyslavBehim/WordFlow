@@ -28,12 +28,7 @@ struct WordCardRow: View {
                 Image(systemName: "waveform")
             }
             .buttonStyle(.borderless)
-            Button {
-
-            } label: {
-                Image(systemName: "star")
-            }
-            .buttonStyle(.borderless)
+            
             
 
             

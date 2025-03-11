@@ -11,14 +11,22 @@ struct FlashcardView: View {
     @State var wordCards: [WordCard]
     @State private var currentIndex: Int = 0
     @State private var currentWord: Int = 0
-    @State private var knownWords: [WordCard] = []
-    @State private var stillLearningWords: [WordCard] = []
     @State private var isFinished = false
     @Environment(\.dismiss) var dismiss
     
     @StateObject var flashCardVM = FlashCardViewModel()
     
+    @State private var transitionType: TypeOfTracnsition = .moveForward
+    @EnvironmentObject var folderViewModel:FolderViewModel
+    @Binding var folder : Folder
+
     
+    var learnedWords:Int {
+        folder.wordsInFolder.filter { $0.learned }.count
+    }
+    var stillLearningWords:Int {
+        folder.wordsInFolder.filter { !$0.learned }.count
+    }
     var body: some View {
         VStack {
             HStack{
@@ -41,26 +49,28 @@ struct FlashcardView: View {
                     .font(.title)
             } else {
                 if isFinished {
-                    ResultView(knownWords: knownWords, stillLearningWords: stillLearningWords)
+                    ResultView(folder: folder)
                 }else{
-                    Gauge(value: Double(currentWord), in: 0...Double(wordCards.count)) {
+                    Gauge(value: Double(flashCardVM.indexOfWord), in: 0...Double(wordCards.count)) {
                     }.gaugeStyle(.accessoryLinearCapacity)
                     FlashcardRow(wordCard: wordCards[flashCardVM.currentIndex],
                                  sizeOfArray: wordCards.count,
                                  currentIndex: $flashCardVM.currentIndex ,
-                                 currentWord: $currentWord,
-                                 isFinished: $isFinished,
-                                 learnedWords : $knownWords,
-                                 stillLearningWords: $stillLearningWords)
+                                 currentWord: $flashCardVM.indexOfWord,
+                                 isFinished: $isFinished, folder: $folder)
                     .environmentObject(flashCardVM)
                     .id(flashCardVM.currentIndex)
-                    .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .leading)))
+                    .transition(transitionType.transition)
                     
                     HStack{
                         Button {
                             flashCardVM.returnToPreviewCard(sizeOfArray: wordCards.count) { result in
                                 if result {
                                     print("Successfully returned to preview card")
+                                    transitionType = .moveBack
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                                                        transitionType = .moveForward
+                                                    }
                                 }else{
                                     print("err")
                                 }
@@ -77,7 +87,7 @@ struct FlashcardView: View {
                                 RoundedRectangle(cornerRadius: 25)
                                     .fill(Color(.systemRed).opacity(0.4))
                                     .frame(width: 70 , height: 50)
-                                Text("\(stillLearningWords.count)")
+                                Text("\(stillLearningWords)")
                                     .fontWeight(.semibold)
                                     .foregroundStyle(Color(.red))
                                     .contentTransition(.numericText())
@@ -94,7 +104,7 @@ struct FlashcardView: View {
                                 RoundedRectangle(cornerRadius: 25)
                                     .fill(Color(.systemGreen).opacity(0.4))
                                     .frame(width: 70 , height: 50)
-                                Text("\(knownWords.count)")
+                                Text("\(learnedWords)")
                                     .fontWeight(.semibold)
                                     .foregroundStyle(Color(.systemGreen))
                                     .contentTransition(.numericText())
@@ -118,6 +128,6 @@ struct FlashcardView: View {
 
 
 
-#Preview {
-    FlashcardView(wordCards: [WordCard(word: "Test", translation: "тест", colorOfCard: Color.primary),WordCard(word: "test", translation: "тест", colorOfCard: Color.pink)])
-}
+//#Preview {
+//    FlashcardView(wordCards: [WordCard(word: "Test", translation: "тест", colorOfCard: Color.primary),WordCard(word: "test", translation: "тест", colorOfCard: Color.pink)])
+//}

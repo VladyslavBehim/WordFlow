@@ -8,18 +8,19 @@
 import SwiftUI
 
 struct ResultView: View {
-    @State  var knownWords: [WordCard]
-    @State  var stillLearningWords: [WordCard]
-    
-    @State var finalKnownWords: [WordCard] = []
-    @State var finalStillLearningWords: [WordCard] = []
-    
+    @State var folder : Folder
     var totalWords: Int {
-         finalKnownWords.count + finalStillLearningWords.count
+        folder.wordsInFolder.count
         }
+    var learnedWords:Int {
+        folder.wordsInFolder.filter { $0.learned }.count
+    }
+    var stillLearningWords:Int {
+        folder.wordsInFolder.filter { !$0.learned }.count
+    }
         
         var knownPercentage: Double {
-            totalWords > 0 ? (Double(finalKnownWords.count) / Double(totalWords)) * 100 : 0
+            totalWords > 0 ? (Double(learnedWords) / Double(totalWords)) * 100 : 0
         }
     var body: some View {
         VStack{
@@ -36,7 +37,7 @@ struct ResultView: View {
                             .frame(width: 150, height: 150)
                         
                         Circle()
-                            .trim(from: 0, to: CGFloat(finalKnownWords.count) / CGFloat(max(1, totalWords)))
+                            .trim(from: 0, to: CGFloat(learnedWords) / CGFloat(max(1, totalWords)))
                             .stroke(
                                 Color.green,
                                 style: StrokeStyle(lineWidth: 20, lineCap: .round, lineJoin: .round)
@@ -58,7 +59,7 @@ struct ResultView: View {
                         HStack{
                             Text("Знаю")
                             Spacer()
-                            Text("\(finalKnownWords.count)")
+                            Text("\(learnedWords)")
                                 .contentTransition(.numericText())
                         }
                         .fontWeight(.semibold)
@@ -72,7 +73,7 @@ struct ResultView: View {
                         HStack{
                             Text("Еще изучаю")
                             Spacer()
-                            Text("\(finalStillLearningWords.count)")
+                            Text("\(stillLearningWords)")
                                 .contentTransition(.numericText())
                         }
                         .fontWeight(.semibold)
@@ -83,17 +84,17 @@ struct ResultView: View {
                 }
             }
         }
-        .onAppear{
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                withAnimation(.easeOut(duration: 1.5)) {
-                    self.finalKnownWords = knownWords
-                    self.finalStillLearningWords = stillLearningWords
-                }
-            }
-        }
+//        .onAppear{
+//            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+//                withAnimation(.easeOut(duration: 1.5)) {
+//                    self.finalKnownWords = knownWords
+//                    self.finalStillLearningWords = stillLearningWords
+//                }
+//            }
+//        }
     }
 }
 
-#Preview {
-    ResultView(knownWords: [WordCard](), stillLearningWords: [WordCard]())
-}
+//#Preview {
+//    ResultView(knownWords: [WordCard](), stillLearningWords: [WordCard]())
+//}
