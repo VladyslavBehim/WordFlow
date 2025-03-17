@@ -13,6 +13,7 @@ struct AddingNewFolder: View {
     @State var selectedEmoji: String = "📂"
     @Binding var isShownTextField : Bool
     @ObservedObject var viewModel: FolderVM
+    @Environment(\.managedObjectContext) var context
 
     var body: some View {
         VStack{
@@ -37,6 +38,8 @@ struct AddingNewFolder: View {
 //                let newWord = Folder( nameOfFolder: nameOfFolder, wordsInFolder: [WordCard](), imageOfFolder: selectedEmoji)
                 withAnimation(.default) {
                     viewModel.createFolder(nameOfFolder: nameOfFolder, imageOfFolder: selectedEmoji)
+                    let newFolder = CDFolder(imageOfFolder: selectedEmoji, nameOfFolder: nameOfFolder, context: context)
+                    PersistenceController.shared.save()
                     isShownTextField = false
                 }
             } label: {

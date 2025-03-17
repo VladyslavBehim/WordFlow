@@ -61,3 +61,21 @@ enum Colors: String, CaseIterable {
         
     }
 }
+
+struct AppColors {
+    static let primary = Color("Primary")
+    static let secondary = Color("Secondary")
+   
+}
+
+struct ButtonFilledColors {
+    static let primary = Color("Primary")
+    static let pressed = Color("ButtonPressed")
+    static let disabled = Color("ButtonDisabled")
+}
+
+struct ButtonFilledColorsKnowledgeStatus {
+    static let learned = Color("Learned")
+    static let stillLearning = Color("StillLearning")
+}
+

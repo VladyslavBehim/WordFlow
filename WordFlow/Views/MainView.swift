@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct MainView: View {
+    let persistenceController = PersistenceController.shared
 
     var body: some View {
         TabView {
@@ -15,7 +16,11 @@ struct MainView: View {
                 .tabItem {
                     Label("Learning", systemImage: "list.bullet.clipboard")
                 }
-
+            CDFolderListView()
+                .tabItem {
+                    Label("LearningTest", systemImage: "list.bullet.clipboard")
+                }
+                .environment(\.managedObjectContext, persistenceController.container.viewContext)
             Text("Statistics")
                 .tabItem {
                     Label("Statistics", systemImage: "chart.xyaxis.line")

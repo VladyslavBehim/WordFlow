@@ -12,6 +12,6 @@ struct WordCard : Identifiable , Equatable{
     let id: String = UUID().uuidString
     let word: String
     let translation: String
-    let colorOfCard: Color
+//    let colorOfCard: Color
     var learned: Bool = false
 }

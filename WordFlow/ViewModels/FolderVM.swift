@@ -31,7 +31,7 @@ class FolderVM: ObservableObject{
     }
     
     func addWord(to folderID: String, term: String, definition: String) {
-        let newWord = WordCard(word: term, translation: definition, colorOfCard: Color.primary)
+        let newWord = WordCard(word: term, translation: definition)
         repository.addWord(to: folderID, word: newWord)
         loadFolders()
     }
@@ -56,6 +56,8 @@ class FolderVM: ObservableObject{
         loadFolders()
 
     }
+    
+    
     
     
     

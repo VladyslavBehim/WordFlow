@@ -12,10 +12,10 @@ struct AddingNewCard: View {
     @State var newWord : String = String()
     @State var newWordTranslation : String = String()
     @Binding var isShownTextField : Bool
-    @State var folder : Folder
-   
+    let folder : CDFolder?
+    @Environment(\.managedObjectContext) var context
+
     
-    @ObservedObject var viewModel: FolderVM
 
     var body: some View {
         VStack{
@@ -29,38 +29,16 @@ struct AddingNewCard: View {
                     .padding()
                     .background(Color.gray.opacity(0.3))
                     .clipShape(RoundedRectangle(cornerRadius: 20))
-                HStack{
-                    Circle().fill(colorForCard).frame(width: 25 , height: 25)
-                        .transition(.move(edge: .leading))
-                    Divider()
-                        .frame(height: 50)
-                    HStack{
-                        ForEach(Colors.allCases, id: \.self) { color in
-                            Spacer()
-                            Button {
-                                withAnimation(.default) {
-                                    colorForCard = color.color
-                                }
-                            } label: {
-                                Circle().fill(color.color).frame(width: 20 , height: 20)
-                            }
-                            Spacer()
-
-                        }
-
-                    }
-                    .frame(maxWidth:.infinity)
-                    
-                    
-                }
-                .padding(.horizontal)
             }
             
             Spacer()
             Button {
                 withAnimation(.default) {
+                    let word = CDWordCard(word: newWord, translation: newWordTranslation, context: context)
+                    word.folder = folder
+                    PersistenceController.shared.save()
                     isShownTextField = false
-                    viewModel.addWord(to: folder.id, term: newWord, definition: newWordTranslation)
+                    
                 }
                 self.newWord = ""
                 self.newWordTranslation = ""

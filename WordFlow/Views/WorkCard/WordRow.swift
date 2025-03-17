@@ -1,18 +1,16 @@
 //
-//  WorkCardRow.swift
+//  WordRow.swift
 //  WordFlow
 //
-//  Created by Vladyslav Behim on 25.02.2025.
+//  Created by Vladyslav Behim on 16.03.2025.
 //
 
 import SwiftUI
 
-struct WordCardRow: View {
-    var wordCard : CDWordCard
+struct WordRow: View {
     var speechManager = SpeechManager()
-    
+    @ObservedObject var wordCard : CDWordCard
     var body: some View {
-        
         HStack{
             VStack(alignment:.leading){
                 Text("\(wordCard.word)")
@@ -36,4 +34,7 @@ struct WordCardRow: View {
     }
 }
 
-
+//#Preview {
+//    WordRow(wordCard: CDWordCard.exampleCDWordCard)
+//        .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+//}

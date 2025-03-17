@@ -1,39 +1,63 @@
 //
-//  WordList.swift
+//  CDWordListView.swift
 //  WordFlow
 //
-//  Created by Vladyslav Behim on 25.02.2025.
+//  Created by Vladyslav Behim on 16.03.2025.
 //
 
 import SwiftUI
 
-struct WordList: View {
+struct CDWordListView: View {
     let dateFormatter = DateFormatters()
     @State var isShownTextField : Bool = false
     @State var isShownFleshCardsView : Bool = false
-    @Binding var folder : Folder
-    var learnedWords : Int{
-        folder.wordsInFolder.filter { $0.learned }.count
+    let folder : CDFolder?
+    @FetchRequest(fetchRequest: CDWordCard.fetch()) var tasks
+    @Environment(\.managedObjectContext) var context
+    @Environment(\.dismiss) var dismiss
+    
+    init(folder: CDFolder?,   viewModel: FolderVM, pluralize: Pluralize = Pluralize()) {
+        self.folder = folder
+        self.viewModel = viewModel
+        self.pluralize = pluralize
+        
+        let request = CDWordCard.fetch()
+        request.predicate = NSPredicate(format: "folder == %@", folder! as CVarArg)
+        self._tasks = FetchRequest(fetchRequest: request)
     }
-    var stillLearinigWords : Int{
-        folder.wordsInFolder.filter { !$0.learned }.count
-    }
+
+//    @Binding var folder : CDFolder
+//    var learnedWords : Int{
+//        folder.wordsInFolder.filter { $0.learned }.count
+//    }
+//    var stillLearinigWords : Int{
+//        folder.wordsInFolder.filter { !$0.learned }.count
+//    }
     @State var stillLearinigWordsArray:[WordCard] = []
     @ObservedObject var viewModel: FolderVM
     var pluralize = Pluralize()
+    
     var body: some View {
         VStack(spacing:0){
             List{
+                Button {
+                    let word = CDWordCard(word: "Test", translation: "Тест", context: context)
+                    word.folder = folder
+                    PersistenceController.shared.save()
+                } label: {
+                    Text("Create a new word")
+                }
+
                 Section{
-                    NavigationLink {
-                        FlashcardView(folder: $folder, viewModel: viewModel, stillLearinigWordsArray: $stillLearinigWordsArray)
-                    } label: {
-                        Label {
-                            Text("Flashcards")
-                        } icon: {
-                            Image(systemName: "inset.filled.rectangle.on.rectangle")
-                        }
-                    }
+//                    NavigationLink {
+//                        FlashcardView(folder: $folder, viewModel: viewModel, stillLearinigWordsArray: $stillLearinigWordsArray)
+//                    } label: {
+//                        Label {
+//                            Text("Flashcards")
+//                        } icon: {
+//                            Image(systemName: "inset.filled.rectangle.on.rectangle")
+//                        }
+//                    }
 
                     Button {
                         isShownFleshCardsView.toggle()
@@ -50,20 +74,20 @@ struct WordList: View {
                         Text("Learned")
                             .foregroundStyle(Color.gray)
                         Spacer()
-                        Text("\(learnedWords) | \(folder.wordsInFolder.count)")
-                            .fontWeight(.semibold)
+                       
                     }
                 }
                 Section {
-                    ForEach(folder.wordsInFolder.reversed()){ word in
+                    ForEach(tasks.reversed()){ word in
                         
                         HStack{
                             if word.learned{
                                 Image(systemName: "graduationcap.fill")
                             }
-//                            WordCardRow(wordCard: word)
+                            WordCardRow(wordCard: word)
+//                            Text(word.word)
                             Button {
-                                viewModel.deleteWord(from: folder.id, wordID: word.id)
+//                                viewModel.deleteWord(from: folder.id, wordID: word.id)
                                 
                             } label: {
                                 Image(systemName: "trash.fill")
@@ -78,10 +102,10 @@ struct WordList: View {
                     
                 } header: {
                     HStack{
-                        if !folder.wordsInFolder.isEmpty{
+                        if !tasks.isEmpty{
                             VStack(alignment:.leading){
                                 Text("Words")
-                                Text("\(dateFormatter.formatDateDayMounthYear(folder.creationDate))")
+//                                Text("\(dateFormatter.formatDateDayMounthYear(tasks.creationDate))")
                             }
                             .fontWeight(.semibold)
                         }
@@ -100,7 +124,7 @@ struct WordList: View {
                                 .background(Color.accentColor)
                                 .clipShape(RoundedRectangle(cornerRadius: 15))
                         }
-                        if folder.wordsInFolder.isEmpty{
+                        if tasks.isEmpty{
                             Spacer()
 
                         }
@@ -108,25 +132,31 @@ struct WordList: View {
                 }
             }
             
-//            .sheet(isPresented: $isShownTextField) {
-//                AddingNewCard(isShownTextField: $isShownTextField, folder: Folder(nameOfFolder: "", wordsInFolder: [WordCard(word: String(), translation: String(), learned: false)], imageOfFolder: ""))
-//                    .presentationDetents([.height(300)])
-//                    .presentationCornerRadius(30)
-//                    .presentationDragIndicator(.visible)
-//            }
+            .sheet(isPresented: $isShownTextField) {
+                AddingNewCard(isShownTextField: $isShownTextField, folder: folder)
+                    .presentationDetents([.height(300)])
+                    .presentationCornerRadius(30)
+                    .presentationDragIndicator(.visible)
+            }
             .fullScreenCover(isPresented: $isShownFleshCardsView) {
                 FlashcardView(folder: $folder, viewModel: viewModel, stillLearinigWordsArray: $stillLearinigWordsArray)
             }
             
         }
-        
-        .navigationTitle("\(folder.nameOfFolder)")
-        .onAppear {
-            self.stillLearinigWordsArray = folder.wordsInFolder.filter { !$0.learned }
+        .toolbar{
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    if let folder = folder {
+                        CDFolder.delete(folder: folder )
+                        dismiss()
+                    }
+                } label: {
+                    Image(systemName: "trash")
+                }
+
+            }
         }
+        .navigationTitle("\(folder!.nameOfFolder)")
+        
     }
 }
-
-//#Preview {
-//    WordList(folder: .constant(Folder(nameOfFolder: "Test", wordsInFolder: [WordCard(word: "test", translation: "Тест", colorOfCard: Color.pink)], imageOfFolder: "")))
-//}

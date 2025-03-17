@@ -8,19 +8,20 @@
 import SwiftUI
 
 struct FlashcardRow: View {
-    @State var wordCard:WordCard
+    @Binding var wordCard:WordCard
+    @State var folderId:String
     @State var sizeOfArray:Int
     @State var isShownTranslation: Bool = false
     @State private var offset = CGSize.zero
     @State private var cardOffset: CGSize = .zero
     @State private var feedback = UINotificationFeedbackGenerator()
-    @Binding var currentIndex : Int
-    @Binding var currentWord : Int
-    @Binding var isFinished : Bool
-    @Binding var folder :Folder
-    @EnvironmentObject var flashCardsVM : FlashCardViewModel
     @ObservedObject var viewModel: FolderVM
+    @ObservedObject var flashCardVM: FlashCardViewModel
     var speechManager = SpeechManager()
+    
+    @Binding var learnedWords : Int
+    @Binding var stillLearningWords:Int
+    @Binding var isFinished:Bool
     
     var body: some View {
         
@@ -78,11 +79,7 @@ struct FlashcardRow: View {
     
     private func getComputedBackground() -> Color {
         if offset == .zero {
-            if wordCard.colorOfCard == Color.primary {
-                return Color(.wordCardBackground)
-            }else{
-                return wordCard.colorOfCard.opacity(0.6)
-            }
+            return Color.primary
         }  else {
             return getBackgroundColor(offset: offset)
         }
@@ -111,23 +108,27 @@ struct FlashcardRow: View {
                 if abs(offset.width) > 100 {
                     if offset.width > 0 {
                         feedback.notificationOccurred(.success)
-                        viewModel.changeStatusOfWordTrue(from: folder.id, wordId: folder.wordsInFolder[flashCardsVM.indexOfWord].id)
+                        viewModel.changeStatusOfWordTrue(from: folderId, wordId: wordCard.id)
+                        learnedWords += 1
+                        
                     } else {
                         feedback.notificationOccurred(.error)
-                        viewModel.changeStatusOfWordFalse(from: folder.id, wordId: folder.wordsInFolder[flashCardsVM.indexOfWord].id)
-
+                        viewModel.changeStatusOfWordFalse(from: folderId, wordId: wordCard.id)
+                        stillLearningWords += 1
                     }
+                    withAnimation(.default) {
+                        flashCardVM.changeIndex (sizeOfArray: sizeOfArray)
+                    }
+                    print("flashCardVM.IndexOfWord \(flashCardVM.indexOfWord)")
+                    print("flashCardVM.CurrentIdex \(flashCardVM.currentIndex)")
+                    print("size of array \(sizeOfArray)")
                     
-                    
-                    flashCardsVM.changeIndex(sizeOfArray: sizeOfArray) { result in
-                        if !result {
-                            withAnimation(.default) {
-                                isFinished = true
-                            }
-                            print("Все карточки пройдены!")
+                    if flashCardVM.indexOfWord == sizeOfArray {
+                        withAnimation(.default) {
+                            isFinished = true
+                            
                         }
                     }
-                    
                     
                 } else {
                     withAnimation(.default) {
@@ -138,6 +139,3 @@ struct FlashcardRow: View {
     }
 }
 
-//#Preview {
-//    FlashcardRow(wordCard: WordCard(word: "Hello , my name is Vladislav , and I am 22 years old", translation: "Привет, мой имя Владислав, и я 22 года", colorOfCard: Color.primary), sizeOfArray: 3, currentIndex: .constant(0), currentWord: .constant(0), isFinished: .constant(false), learnedWords: .constant([WordCard]()), stillLearningWords: .constant([WordCard]()))
-//}

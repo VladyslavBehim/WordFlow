@@ -1,15 +1,14 @@
 //
-//  ForderRow.swift
+//  CDFolderRow.swift
 //  WordFlow
 //
-//  Created by Vladyslav Behim on 26.02.2025.
+//  Created by Vladyslav Behim on 17.03.2025.
 //
 
 import SwiftUI
 
-struct ForderRow: View {
-    
-    @Binding var folder:Folder
+struct CDFolderRow: View {
+    let folder : CDFolder
     var body: some View {
         HStack{
             Text("\(self.folder.imageOfFolder)")
@@ -19,13 +18,12 @@ struct ForderRow: View {
             VStack(alignment:.leading){
                 Text("\(self.folder.nameOfFolder)")
                     .fontWeight(.semibold)
-                Text("The number of words is \(folder.quantityOfWordsInFolder)")
-                
-                    .font(.footnote)
-                    .foregroundStyle(Color.gray)
+//                Text("The number of words is \(folder.quantityOfWordsInFolder)")
+//                
+//                    .font(.footnote)
+//                    .foregroundStyle(Color.gray)
             }
         }
     }
 }
-
 

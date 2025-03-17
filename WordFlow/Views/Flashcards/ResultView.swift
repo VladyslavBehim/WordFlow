@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ResultView: View {
-    @State var folder : Folder
+    @Binding var folder : Folder
     var totalWords: Int {
         folder.wordsInFolder.count
         }
